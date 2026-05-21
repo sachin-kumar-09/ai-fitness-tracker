@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: aiservice
+
+  mongodb:
+    uri: mongodb://localhost:27017/ai-recommendation-fitness
+    database: ai-recommendation-fitness
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: activity-processor-group # multiple consumer will be grouped here
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # this will be mapped to default type we have given below.
+
+    properties:
+      spring.json.use.type.headers: false # ObjectType which is passed by producer, if we have our own ObjectType then we do not require the producer to pass it in headers, that's why false.
+      spring.json.trusted.packages: "*" # this will accept the class from every package sent by the Producer.
+      spring.json.value.default.type: app.fitness.aiservice.entity.Activity # whatever data we are recieving will be mapped to the class.
+
+kafka:
+  topic:
+    name: activity-events
+
+logging:
+  level:
+    org.springframework.boot.context.config: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+gemini:
+  api:
+    url: ${GEMINI_URL}
+    key: ${GEMINI_KEY}
