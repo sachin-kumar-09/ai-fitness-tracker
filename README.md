@@ -1,47 +1,84 @@
-# 🏋️ AI Fitness Tracker
+# 🏋️ Fitness Microservices Architecture
 
-An AI-powered fitness tracking platform built using **Spring Boot Microservices**, **Apache Kafka**, **MongoDB**, **PostgreSQL**, **Eureka Service Discovery**, and **Google Gemini AI**.
+This project follows an **event-driven microservices architecture** for tracking user fitness activities and generating AI-powered recommendations using **Google Gemini**.
 
-The platform tracks fitness activities, processes events asynchronously using Kafka, and generates personalized AI-powered workout recommendations.
+## Architecture Diagram
 
----
+![Fitness Microservices Architecture](./assets/architecture.png)
 
-# 🚀 Features
+## System Flow
 
-- 👤 User Management Service
-- 🏃 Activity Tracking
-- 🤖 AI-based Fitness Recommendations
-- 📩 Kafka Event Streaming
-- 🔍 Eureka Service Discovery
-- 🍃 MongoDB for activity & recommendations
-- 🐘 PostgreSQL for user management
-- ⚡ Gemini AI integration for personalized fitness coaching
+### 1. User Registration
+- User details are registered through the **User Service**.
+- User data is persisted in the database.
 
----
+### 2. Activity Tracking
+- Activity data (Running, Walking, Cycling, etc.) is sent to the **Activity Service** via API requests.
+- 
+### 3. User Validation
+Before saving an activity:
 
-# 🏗️ Microservice Architecture
+- The **Activity Service** validates whether the user exists.
+- Inter-service communication happens through **REST API calls**.
 
 ```text
-                   +------------------+
-                   | Eureka Server    |
-                   | Service Registry |
-                   +--------+---------+
-                            |
-         ---------------------------------------------
-         |                     |                     |
-         |                     |                     |
-+--------v------+   +---------v------+   +---------v------+
-| User Service  |   | ActivityTracker|   | AI Service     |
-| PostgreSQL    |   | MongoDB        |   | MongoDB        |
-+---------------+   +--------+-------+   +--------+-------+
-                             |
-                             |
-                      Kafka Producer
-                             |
-                      activity-events
-                             |
-                      Kafka Consumer
-                             |
-                       Gemini AI API
-                             |
-                     Recommendation Saved
+Activity Service → User Service → Validate User
+```
+
+### 4. Event Publishing using Kafka
+Once the activity is successfully saved:
+
+- The **Activity Service** publishes an event to **Kafka**.
+- This makes the architecture asynchronous and loosely coupled.
+
+```text
+Activity Service → Kafka Topic
+```
+
+### 5. AI Recommendation Generation
+The **AI Service** consumes Kafka events and:
+
+- Reads activity information
+- Creates an AI prompt
+- Sends the prompt to **Google Gemini**
+
+```text
+Kafka → AI Service → Google Gemini
+```
+
+### 6. Recommendation Storage
+The generated recommendation is:
+
+- Parsed
+- Processed
+- Stored for later retrieval
+
+Users can then fetch personalized fitness recommendations.
+
+---
+
+## High-Level Workflow
+
+```text
+Postman / Client
+        ↓
+User Service ← Validation → Activity Service
+                                ↓
+                             Kafka
+                                ↓
+                           AI Service
+                                ↓
+                         Google Gemini
+                                ↓
+                     Fitness Recommendation
+```
+
+## Tech Stack
+
+- **Spring Boot** → Microservices
+- **Spring WebClient** → Inter-service communication
+- **Apache Kafka** → Event-driven messaging
+- **Google Gemini API** → AI-powered recommendations
+- **MongoDB** → Data persistence
+- **Eureka Server** → Service discovery
+- **Docker** *(optional if added)*

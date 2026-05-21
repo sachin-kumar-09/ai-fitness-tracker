@@ -8,6 +8,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,10 +123,26 @@ public class ActivityAIServiceHelper {
                     .build();
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("Failed to process recommendation at {}", System.currentTimeMillis(), e);
+            recommendation = createDefaultRecommendation(activity);
         }
 
         return  recommendation;
 
+    }
+
+    private static Recommendation createDefaultRecommendation(Activity activity) {
+        return Recommendation.builder()
+                .userId(activity.getUserId())
+                .activityId(activity.getId())
+                .recommendation("Unable to generate recommendation.")
+                .improvements(Collections.singletonList("Continue with your current routine."))
+                .suggestions(Collections.singletonList("Consider consulting a fitness coach."))
+                .safety(Arrays.asList(
+                        "Always warm up before exercise.",
+                        "Stay hydrated.",
+                        "Listen to your body."
+                ))
+                .build();
     }
 }
