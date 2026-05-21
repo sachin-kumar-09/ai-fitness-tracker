@@ -1,29 +1,5 @@
-server:
-  port: 8083
-
 spring:
   application:
-    name: activitytracker
-
-  mongodb:
-    uri: mongodb://localhost:27017/activity-fitness-tracker
-    database: activity-fitness-tracker
-
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-kafka:
-    topic:
-      name: activity-events
-
-logging:
-  level:
-    org.springframework.boot.context.config: DEBUG
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+    name: activity-tracker
+  config:
+    import: "optional:configserver:http://localhost:8888"

@@ -1,7 +1,6 @@
 package app.fitness.userservice.controller;
 
 import app.fitness.userservice.dto.RegisterRequest;
-import app.fitness.userservice.dto.UserResponse;
 import app.fitness.userservice.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

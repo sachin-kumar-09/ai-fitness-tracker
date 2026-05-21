@@ -17,12 +17,20 @@ public class UserValidationServiceImpl implements UserValidationService {
     @Override
     public boolean validateUser(String userId) {
         log.info("Inside ActivityService :: validateUser :: userId: {}", userId);
-        boolean isValidUser = userServiceWebClient.get()
-                .uri("/api/users/{userId}/validate", userId)
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
-        log.info("userId is valid: {}", isValidUser);
-        return isValidUser;
+        try {
+            boolean isValidUser = userServiceWebClient.get()
+                    .uri("/api/users/{userId}/validate", userId)
+                    .retrieve()
+                    .bodyToMono(Boolean.class)
+                    .block();
+            log.info("userId is valid: {}", isValidUser);
+            return isValidUser;
+        } catch (WebClientResponseException e) {
+            log.error("Error occurred while validating user: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.error("Unexpected error occurred while validating user: {}", e.getMessage());
+            return false;
+        }
     }
 }

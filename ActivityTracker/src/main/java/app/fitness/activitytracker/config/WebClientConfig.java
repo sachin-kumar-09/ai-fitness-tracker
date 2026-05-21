@@ -21,7 +21,7 @@ public class WebClientConfig {
     @Bean
     public WebClient userServiceWebClient(WebClient.Builder webClientBuilder) {
         log.info("Inside WebClientConfig :: userServicwebClient at {}", System.currentTimeMillis());
-        return webClientBuilder.baseUrl("http://USERSERVICE")
+        return webClientBuilder.baseUrl("http://USER-SERVICE")
                 .build();
     }
 }

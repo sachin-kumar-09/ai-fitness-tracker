@@ -15,7 +15,7 @@ public class ActivityMessageListenerImpl implements ActivityMessageListener {
 
     private final ActivityAIService activityAIService;
 
-    @KafkaListener(topics = "${kafka.topic.name}", groupId = "activity-processor-group")
+    @KafkaListener(topics = "${kafka.topic.name}", groupId = "${kafka.group.id}")
     @Override
     public void processActivity(Activity activity) {
         log.info("Entering ActivityMessageListener :: processActivity at {}", System.currentTimeMillis());
