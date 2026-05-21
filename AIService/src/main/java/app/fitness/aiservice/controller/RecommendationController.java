@@ -5,10 +5,7 @@ import app.fitness.aiservice.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,8 +17,8 @@ public class RecommendationController {
 
     private final RecommendationService recommendationService;
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Object> getUserRecommendation(@PathVariable String userId) {
+    @GetMapping("/user")
+    public ResponseEntity<Object> getUserRecommendation(@RequestParam String userId) {
         try{
             log.info("RecommendationController :: getUserRecommendation at {}", System.currentTimeMillis());
             log.info("payload : {}", userId);
@@ -34,8 +31,8 @@ public class RecommendationController {
         }
     }
 
-    @GetMapping("/activity/{activityId}")
-    public ResponseEntity<Object> getActivityRecommendation(@PathVariable String activityId) {
+    @GetMapping("/activity")
+    public ResponseEntity<Object> getActivityRecommendation(@RequestParam String activityId) {
         try{
             log.info("RecommendationController :: getActivityRecommendation at {}", System.currentTimeMillis());
             log.info("payload : {}", activityId);
