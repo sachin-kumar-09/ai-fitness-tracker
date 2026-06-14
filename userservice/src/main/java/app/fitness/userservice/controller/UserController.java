@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/users")
@@ -38,11 +39,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}/validate")
-    public ResponseEntity<Boolean> validateUserId(@PathVariable String userId) {
+    @GetMapping("/{keycloakId}/validate")
+    public boolean validateUserId(@PathVariable String keycloakId) {
         log.info("Entering UserController :: validateUserId at {}", System.currentTimeMillis());
-        log.info("Payload: {}", userId);
-        return ResponseEntity.ok(userService.existsByUserId(userId));
+        log.info("Payload: {}", keycloakId);
+        return userService.existsByUserId(keycloakId);
     }
 
 }

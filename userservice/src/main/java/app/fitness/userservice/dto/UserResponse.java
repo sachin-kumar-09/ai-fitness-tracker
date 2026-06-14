@@ -18,4 +18,5 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
+    private String keycloakId;
 }

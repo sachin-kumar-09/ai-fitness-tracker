@@ -11,5 +11,6 @@ public record RegisterRequest(
         @NotBlank(message = "Password is required")
         String password,
         String firstName,
-        String lastName
+        String lastName,
+        String keycloakId
 ) {}

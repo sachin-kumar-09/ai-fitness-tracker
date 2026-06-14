@@ -21,7 +21,16 @@ public class UserServiceImpl implements UserService {
         log.info("Entering inside UserService : register at {}", request);
         log.info("Payload: {}", request);
         if(userRepository.existsByEmail(request.email())) {
-            throw new Exception("User already exists.");
+            User existUser = userRepository.findByEmail(request.email());
+            UserResponse response = new UserResponse();
+            response.setEmail(existUser.getEmail());
+            response.setPassword(existUser.getPassword());
+            response.setLastName(existUser.getLastName());
+            response.setFirstName(existUser.getFirstName());
+            response.setId(existUser.getId());
+            response.setKeycloakId(existUser.getKeycloakId());
+            response.setCreatedAt(existUser.getCreatedAt());
+            return response;
         }
 
         User user = new User();
@@ -29,14 +38,16 @@ public class UserServiceImpl implements UserService {
         user.setPassword(request.password());
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
+        user.setKeycloakId(request.keycloakId());
 
         User savedUser = userRepository.save(user);
         UserResponse response = new UserResponse();
         response.setEmail(savedUser.getEmail());
         response.setPassword(savedUser.getPassword());
-        response.setLastName(user.getLastName());
-        response.setFirstName(user.getFirstName());
+        response.setLastName(savedUser.getLastName());
+        response.setFirstName(savedUser.getFirstName());
         response.setId(savedUser.getId());
+        response.setKeycloakId(savedUser.getKeycloakId());
         response.setCreatedAt(savedUser.getCreatedAt());
         return response;
     }
@@ -45,23 +56,27 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserProfile(String email) throws Exception {
         log.info("Entering UserService : getUserProfile at {}", email);
         log.info("Payload: {}", email);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("User does not exist."));
+        User user = userRepository.findByEmail(email);
+        if(user == null) {
+            throw new Exception("User not found");
+        }
+
         UserResponse response = new UserResponse();
         response.setEmail(user.getEmail());
         response.setPassword(user.getPassword());
         response.setLastName(user.getLastName());
         response.setFirstName(user.getFirstName());
         response.setId(user.getId());
+        response.setKeycloakId(user.getKeycloakId());
         response.setCreatedAt(user.getCreatedAt());
 
         return response;
     }
 
     @Override
-    public Boolean existsByUserId(String userId) {
-        log.info("Entering UserService : existsByUserId at {}", userId);
-        log.info("Payload: {}", userId);
-        return userRepository.existsById(userId);
+    public Boolean existsByUserId(String keycloakId) {
+        log.info("Entering UserService : existsByUserId at {}", keycloakId);
+        log.info("Payload: {}", keycloakId);
+        return userRepository.existsByKeycloakId(keycloakId);
     }
 }

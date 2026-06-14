@@ -8,7 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(schema = "fitness", name = "users")
 @Data
 public class User {
     @Id
@@ -32,4 +32,6 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    private String keycloakId;
 }

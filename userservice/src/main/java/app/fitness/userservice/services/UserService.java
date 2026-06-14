@@ -8,5 +8,5 @@ public interface UserService {
 
     UserResponse getUserProfile(String email) throws Exception;
 
-    Boolean existsByUserId(String userId);
+    Boolean existsByUserId(String keycloakId);
 }
